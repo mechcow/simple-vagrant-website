@@ -1,0 +1,23 @@
+# Single box LAMP stack installed via puppet
+#
+# Joel Heenan 11/07/2017
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "precise32"
+  config.vm.hostname = "vibrato-lamp.box"
+  config.vm.network :private_netowrk, ip: "192.168.0.30"
+
+  config.vm.provider :virtualbox do |vb|
+    vb.customise [
+      "modifyvm", :id,
+      "--cpuexecutioncap", "50",
+      "--memory", "256",
+    ]
+  end
+
+  config.vm.provision :puppet do |puppet|
+    puppet.manifests_path = "puppet/manifests"
+    puppet.manifest_file = "site.pp"
+    puppet.module_path = "puppet/modules"
+  end
+end
